@@ -351,16 +351,6 @@ public class Gleitpunktzahl {
 	 */
 	public Gleitpunktzahl add(Gleitpunktzahl r) {
 
-		// manage signs
-		if(r.vorzeichen){
-			r.vorzeichen = false;
-			return sub(r);
-		}
-		if(vorzeichen){
-			vorzeichen = false;
-			return r.sub(this);
-		}
-
 		Gleitpunktzahl erg = new Gleitpunktzahl();
 
 		//edge cases
@@ -384,7 +374,22 @@ public class Gleitpunktzahl {
 
 		//standard case
 		denormalisiere(this,r);
-		erg.mantisse = this.mantisse + r.mantisse;
+
+		if(this.vorzeichen == r.vorzeichen){
+			erg.mantisse = this.mantisse + r.mantisse;
+			erg.vorzeichen = this.vorzeichen;
+		} else if (r.vorzeichen){
+			erg.mantisse = this.mantisse - r.mantisse;
+		} else if (this.vorzeichen){
+			erg.mantisse = -this.mantisse + r.mantisse;
+		}
+
+
+		if(erg.mantisse < 0){
+			erg.vorzeichen = true;
+			erg.mantisse *= -1;
+		}
+
 		erg.exponent = this.exponent;
 		normalisiere();
 		r.normalisiere();
@@ -400,63 +405,8 @@ public class Gleitpunktzahl {
 	 * gespeichert, normiert, und dieses wird zurueckgegeben.
 	 */
 	public Gleitpunktzahl sub(Gleitpunktzahl r) {
-
-		if(r.vorzeichen){
-			r.vorzeichen = false;
-			return add(r);
-		}
-		if(vorzeichen){
-			vorzeichen = false;
-			Gleitpunktzahl temp = add(r);
-			temp.vorzeichen = true;
-			return temp;
-		}
-
-		Gleitpunktzahl erg = new Gleitpunktzahl();
-		//edge cases
-		if(this.exponent == maxExponent && r.exponent == maxExponent){
-			if(this.mantisse == 0 && r.mantisse == 0) {
-				if(this.vorzeichen == r.vorzeichen) erg.setNaN();
-				else erg.setInfinite(this.vorzeichen);
-				return erg;
-			}
-		}
-		if(r.exponent == maxExponent && r.mantisse == 0){
-			erg.setInfinite(r.vorzeichen);
-			return erg;
-		}else if(this.exponent == maxExponent && this.mantisse == 0){
-			erg.setInfinite(this.vorzeichen);
-			return erg;
-		}
-		// case Zero
-		if(r.exponent == 0 && r.mantisse == 0) return this;
-
-		// rather subtract from the bigger number
-//		if(this.compareAbsTo(r) < 1){
-//			r.vorzeichen = !r.vorzeichen;
-//			return r.add(this);
-//		}
-
-		//check if a < b in a - b
-		if(this.compareAbsTo(r)<1){ // a<=b
-			erg = r.sub(this);
-			erg.vorzeichen = !erg.vorzeichen;
-			return erg;
-		}
-
-		//denorm add and norm
-		denormalisiere(this,r);
-		erg.mantisse = this.mantisse - r.mantisse;
-//		if(erg.mantisse< 0){
-//			erg.vorzeichen = !erg.vorzeichen;
-//			erg.mantisse *= -1;
-//		}
-		erg.exponent = this.exponent;
-		normalisiere();
-		r.normalisiere();
-		erg.normalisiere();
-
-		return erg;
+		r.vorzeichen = !r.vorzeichen;
+		return add(r);
 	}
 	
 	/**
