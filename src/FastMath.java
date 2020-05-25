@@ -19,7 +19,7 @@ public class FastMath {
 	 * In literature, several of those constants for floats or doubles can be
 	 * found. There's no optimal constant for all cases.
 	 */
-	private static int MAGIC_NUMBER = 1597462996;
+	private static int MAGIC_NUMBER = 1331;
 
 	/**
 	 * belegt die MAGIC_NUMBER mit dem Wert magic
@@ -45,11 +45,13 @@ public class FastMath {
 	 */
 	public static Gleitpunktzahl invSqrt(Gleitpunktzahl x) {
 
-		if(x.vorzeichen){
+		if(x.vorzeichen || x.isNaN()){
 			Gleitpunktzahl g = new Gleitpunktzahl();
 			g.setNaN();
 			return g;
 		}
+		else if (x.isInfinite()) return new Gleitpunktzahl(0);
+
 		int temp = gleitpunktzahlToIEEE(x);
 		temp >>= 1;
 		temp = MAGIC_NUMBER - temp;
