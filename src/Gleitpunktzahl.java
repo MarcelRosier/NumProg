@@ -360,6 +360,11 @@ public class Gleitpunktzahl {
 				else erg.setInfinite(this.vorzeichen);
 				return erg;
 		}
+		//NaN
+		else if(this.isNaN() || r.isNaN()){
+			erg.setNaN();
+			return erg;
+		}
 		// x + infinity = inifinity
 		else if(r.isInfinite()){
 			erg.setInfinite(r.vorzeichen);
@@ -405,8 +410,9 @@ public class Gleitpunktzahl {
 	 * gespeichert, normiert, und dieses wird zurueckgegeben.
 	 */
 	public Gleitpunktzahl sub(Gleitpunktzahl r) {
-		r.vorzeichen = !r.vorzeichen;
-		return add(r);
+		Gleitpunktzahl s = new Gleitpunktzahl(r);
+		s.vorzeichen = !s.vorzeichen;
+		return add(s);
 	}
 	
 	/**
