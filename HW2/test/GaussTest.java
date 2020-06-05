@@ -35,4 +35,10 @@ public class GaussTest {
         double[] sol = {24.93955781010718, -8.769046707503822, 1.0};
         assertArrayEquals(sol, Gauss.solveSing(M),1.0E-10);
     }
+    @Test
+    void solveSing_AllZero() {
+        double[][] M = {{1.0,0}, {0,1.0},};
+        double[] sol = {0,0};
+        assertArrayEquals(sol, Gauss.solveSing(M),1.0E-10);
+    }
 }

@@ -8,11 +8,21 @@ public class PageRank {
      * PARAMETER:
      * L: die Linkmatrix (s. Aufgabenblatt)
      * rho: Wahrscheinlichkeit, anstatt einem Link zu folgen,
-     *      zufaellig irgendeine Seite zu besuchen
+     * zufaellig irgendeine Seite zu besuchen
      */
     public static double[][] buildProbabilityMatrix(int[][] L, double rho) {
-        //TODO: Diese Methode ist zu implementieren
-        return new double[2][2];
+        double[][] A = new double[L.length][L.length];
+        for (int i = 0; i < A.length; i++) {
+            for (int j = 0; j < A.length; j++) {
+                double links = 0;
+                for (int l = 0; l < A.length; l++) {
+                    links += L[l][j];
+                }
+                if (L[i][j] == 1) A[i][j] = 1.0 / links;
+                A[i][j] = (1 - rho) * A[i][j] + rho / A.length;
+            }
+        }
+        return A;
     }
 
     /**
@@ -24,11 +34,18 @@ public class PageRank {
      * L: die Linkmatrix (s. Aufgabenblatt)
      * rho: Wahrscheinlichkeit, zufaellig irgendeine Seite zu besuchen
      * ,anstatt einem Link zu folgen.
-     *
      */
     public static double[] rank(int[][] L, double rho) {
-        //TODO: Diese Methode ist zu implementieren
-        return new double[2];
+        double[][] A = buildProbabilityMatrix(L,rho);
+        for (int i = 0; i < A.length; i++) {
+            A[i][i]--;
+        }
+        double[] p = Gauss.solveSing(A);
+        //normalize
+        double sum= Arrays.stream(p).sum();
+        p = Arrays.stream(p).map(x -> x/sum).toArray();
+
+        return p;
     }
 
     /**
@@ -38,7 +55,7 @@ public class PageRank {
      * urls: Die URLs der betrachteten Seiten
      * L: die Linkmatrix (s. Aufgabenblatt)
      * rho: Wahrscheinlichkeit, anstatt einem Link zu folgen,
-     *      zufaellig irgendeine Seite zu besuchen
+     * zufaellig irgendeine Seite zu besuchen
      */
     public static String[] getSortedURLs(String[] urls, int[][] L, double rho) {
         int n = L.length;

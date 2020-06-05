@@ -107,7 +107,7 @@ public class Gauss {
             // pivot element != zero?
             boolean allZero = true;
             for (int j = t; j < gb.length; j++) {
-                if (G[j][t] > 1.0E-10) allZero = false;
+                if (G[j][t] > 0) allZero = false;
             }
             if (allZero) break; //end gauss steps
             gaussStep(G, gb, t);
