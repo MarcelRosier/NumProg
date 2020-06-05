@@ -2,6 +2,10 @@
 
 public class Gauss {
 
+    public static void main(String[] args) {
+        System.out.println(Gauss.backSubst(null,null));
+    }
+
     /**
      * Diese Methode soll die Loesung x des LGS R*x=b durch
      * Rueckwaertssubstitution ermitteln.
@@ -10,8 +14,24 @@ public class Gauss {
      * b: Ein Vektor der Laenge n
      */
     public static double[] backSubst(double[][] R, double[] b) {
-        //TODO: Diese Methode ist zu implementieren
-        return null;
+        //int n = b.length;
+        return new double [2];
+//        double[] sol = new double[n];
+//        for (int i = n-1; i >= 0; i--) {
+//            sol[i] = calcRow(R[i],b[i],sol,i);//b[i] / R[i][i];
+//        }
+//        System.out.println("help");
+//        return sol;
+    }
+
+    private static double calcRow(double[] row, double v, double[] sol, int i) {
+        double temp = v;
+        // substract all known solutions * value in row
+        for (int j = i+1; j < row.length; j++) {
+            temp -= row[j] * sol[j];
+        }
+
+       return  temp / row[i];
     }
 
     /**

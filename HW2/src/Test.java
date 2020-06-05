@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Test {
 
     /*************************************************************/
@@ -19,8 +21,8 @@ public class Test {
                         + "Es dient einzig und allein als Rahmen zurleichteren Implementierung eigener Tests!");
 
         boolean test_gauss = true;
-        boolean test_pagerank = true;
-        boolean test_crawler = true;
+        boolean test_pagerank = false;
+        boolean test_crawler = false;
 
         double b[] = { 1, 1 };
         double C[][] = { { 1, 0 }, { 0, 1 } };
@@ -34,11 +36,9 @@ public class Test {
         /******************************/
         if (test_gauss) {
             System.out.println("-----------------------------------------");
-            System.out
-                    .println("primitiver und unvollstaendiger Test der Klasse Gauss");
+            System.out.println("primitiver und unvollstaendiger Test der Klasse Gauss");
 
-            System.out
-                    .println("  primitiver und unvollstaendiger Test der Methode backSubst");
+            System.out.println("  primitiver und unvollstaendiger Test der Methode backSubst");
             x = Gauss.backSubst(C, b);
             if (Util.vectorCompare(x, xC)) {
                 System.out.println("    Richtiges Ergebnis");
