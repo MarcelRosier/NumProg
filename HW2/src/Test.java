@@ -30,6 +30,12 @@ public class Test {
         double xC[] = { 1, 1 };
         double xA[] = { 1, -1 };
         double x[];
+        double Adv [][] = {{5,-3,2},{-2,6,1},{6,0,3}};
+        double AdvB[] = {2,4,6};
+        double AdvS[] = {1,1,0};
+        double Adv2 [][] = {{2,-3,1},{1,1,-2},{3,-1,-4}};
+        double AdvB2[] = {10,-6,-5};
+        double AdvS2[] = {0.7, -2.1 ,2.3};
 
         /******************************/
         /* Test der Klasse Gauss */
@@ -51,14 +57,15 @@ public class Test {
 
             System.out
                     .println("  primitiver und unvollstaendiger Test der Methode solve");
-            x = Gauss.solve(C, b);
-            if (Util.vectorCompare(x, xC)) {
+//            x = Gauss.solve(C, b);
+            x = Gauss.solve(Adv2, AdvB2);
+            if (Util.vectorCompare(x, AdvS2)) {
                 System.out.println("    Richtiges Ergebnis");
             } else {
                 System.out.println("    FEHLER: falsches Ergebnis:");
                 Util.printVector(x);
                 System.out.println("            richtiges Ergebnis:");
-                Util.printVector(xC);
+                Util.printVector(AdvS2);
             }
 
             System.out
