@@ -1,3 +1,4 @@
+package src;
 /**
  * Dies ist das Interface fuer alle Interpolationsverfahren
  * @author braeckle

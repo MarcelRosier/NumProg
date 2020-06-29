@@ -1,3 +1,4 @@
+package src;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -90,8 +91,33 @@ public class LinearInterpolation implements InterpolationMethod {
      */
     @Override
     public double evaluate(double z) {
-        /* TODO: diese Methode ist zu implementieren */
-        return 0.0;
+        // Find x_i
+        int i;
+        for (i = 0; i < x.length; i++) {
+			if (x[i] > z) {
+				i--;
+				break;
+			}
+		}
+        // check if z not in range
+        if (i < 0) return y[0];
+        if (i >= x.length - 1) return y[y.length-1];
+        // calculate linear function
+        assert (x[i] != x[i+1]);
+		double[] short_x = { x[i], x[i+1] };
+		double[] short_y = { y[i], y[i+1] };
+        if (x[i] == 0) {
+        	// reverse arrays
+        	double temp = x[0];
+        	x[0] = x[1]; x[1] = temp;
+        	temp = y[0]; y[0] = y[1]; y[1] = temp;
+        }
+        TridiagonalMatrix solver = new TridiagonalMatrix(
+				new double[] {short_x[1]}, 
+				new double[] {short_x[0], 1}, 
+				new double[] {1});
+		double params[] = solver.solveLinearSystem(short_y);
+        return params[0]*z + params[1];
     }
 
 }

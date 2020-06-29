@@ -1,3 +1,4 @@
+package src;
 /**
  * NearestNeighbour ist eine sehr einfache Interpolationsidee. Bei der
  * Auswertung an einer Stelle z wird der Funktionswert der am naechsten
