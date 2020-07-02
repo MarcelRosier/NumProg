@@ -1,4 +1,3 @@
-package src;
 import java.util.Arrays;
 
 /**
@@ -7,11 +6,12 @@ import java.util.Arrays;
  * uebergebene Stuetzpunkte interpoliert.
  *
  * @author braeckle
- *
  */
 public class NewtonPolynom implements InterpolationMethod {
 
-    /** Stuetzstellen xi */
+    /**
+     * Stuetzstellen xi
+     */
     double[] x;
 
     /**
@@ -30,15 +30,15 @@ public class NewtonPolynom implements InterpolationMethod {
      * leerer Konstruktore
      */
     public NewtonPolynom() {
-    };
+    }
+
+    ;
 
     /**
      * Konstruktor
      *
-     * @param x
-     *            Stuetzstellen
-     * @param y
-     *            Stuetzwerte
+     * @param x Stuetzstellen
+     * @param y Stuetzwerte
      */
     public NewtonPolynom(double[] x, double[] y) {
         this.init(x, y);
@@ -64,10 +64,8 @@ public class NewtonPolynom implements InterpolationMethod {
      * Faelle "x und y sind unterschiedlich lang" oder "eines der beiden Arrays
      * ist leer" werden nicht beachtet.
      *
-     * @param x
-     *            Stuetzstellen
-     * @param y
-     *            Stuetzwerte
+     * @param x Stuetzstellen
+     * @param y Stuetzwerte
      */
     public void init(double[] x, double[] y) {
         this.x = Arrays.copyOf(x, x.length);
@@ -83,11 +81,25 @@ public class NewtonPolynom implements InterpolationMethod {
      * Diagonale des Dreiecksschemas in der Membervariable f, also f[0],f[1],
      * ...,f[n] = [x0...x_n]f,[x1...x_n]f,...,[x_n]f. Diese koennen spaeter bei
      * der Erweiterung der Stuetzstellen verwendet werden.
-     *
+     * <p>
      * Es gilt immer: x und y sind gleich lang.
      */
     private void computeCoefficients(double[] y) {
-        /* TODO: diese Methode ist zu implementieren */
+
+        int n = y.length - 1;
+        a = new double[y.length];
+        f = new double[y.length];
+        double[] col = y.clone();
+        f[n] = y[n];
+        a[0] = y[0];
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= n - i; j++) {
+                col[j] = (col[j + 1] - col[j]) / (x[j + i] - x[j]);
+            }
+            f[n - i] = col[n - i];
+            a[i] = col[0];
+        }
+
     }
 
     /**
@@ -115,13 +127,29 @@ public class NewtonPolynom implements InterpolationMethod {
      * Koeffizienten noetig. Ist x_new schon als Stuetzstelle vorhanden, werden
      * die Stuetzstellen nicht erweitert.
      *
-     * @param x_new
-     *            neue Stuetzstelle
-     * @param y_new
-     *            neuer Stuetzwert
+     * @param x_new neue Stuetzstelle
+     * @param y_new neuer Stuetzwert
      */
     public void addSamplingPoint(double x_new, double y_new) {
-        /* TODO: diese Methode ist zu implementieren */
+        if (x != null && Arrays.asList(x).contains(x_new)) return;
+        if (f == null || a == null) {
+            double[] y = {y_new};
+            computeCoefficients(y);
+        }
+        int n = a.length;
+        double[] fn = new double[n + 1];
+        double[] an = Arrays.copyOf(a, n + 1);
+        double[] xn = Arrays.copyOf(x, n + 1);
+        xn[n] = x_new;
+        fn[n] = y_new;
+        for (int i = 1; i <= n; i++) {
+            fn[n - i] = (fn[n - i + 1] - f[n - i]) / (x_new - x[n - i]);
+        }
+
+        f = fn;
+        an[n] = fn[0];
+        a = an;
+        x = xn;
     }
 
     /**
@@ -131,7 +159,12 @@ public class NewtonPolynom implements InterpolationMethod {
      */
     @Override
     public double evaluate(double z) {
-        /* TODO: diese Methode ist zu implementieren */
-        return 0.0;
+
+        int n = a.length - 1;
+        double erg = a[n];
+        for (int i = 1; i <= n; i++) {
+            erg = (erg * (z - x[n - i])) + a[n - i];
+        }
+        return erg;
     }
 }

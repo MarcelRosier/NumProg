@@ -139,7 +139,7 @@ public class Gauss {
         return p;
     }
 
-    /**
+    /**D
      * Diese Methode berechnet das Matrix-Vektor-Produkt A*x mit A einer nxm
      * Matrix und x einem Vektor der Laenge m. Sie eignet sich zum Testen der
      * Gauss-Loesung

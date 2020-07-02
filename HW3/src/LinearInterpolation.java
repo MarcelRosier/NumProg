@@ -1,4 +1,3 @@
-package src;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,13 +11,16 @@ import java.util.List;
  * werden die aeussersten Werte y[0] bzw. y[n] zurueckgegeben.
  *
  * @author braeckle
- *
  */
 public class LinearInterpolation implements InterpolationMethod {
 
-    /** Die Stuetzstellen x_i */
+    /**
+     * Die Stuetzstellen x_i
+     */
     double[] x;
-    /** Die Stuetzwerte y_i */
+    /**
+     * Die Stuetzwerte y_i
+     */
     double[] y;
 
     @Override
@@ -38,10 +40,8 @@ public class LinearInterpolation implements InterpolationMethod {
      * "x und y sind unterschiedlich lang" oder "eines der beiden Arrays ist
      * leer" werden nicht beachtet.
      *
-     * @param x
-     *            Stuetzstellen
-     * @param y
-     *            Stuetzwerte
+     * @param x Stuetzstellen
+     * @param y Stuetzwerte
      */
     public void init(final double[] x, double[] y) {
         if (x.length != y.length || x.length == 0)
@@ -84,7 +84,7 @@ public class LinearInterpolation implements InterpolationMethod {
      * aeussersten Werte y[0] bzw. y[n] zurueckgegeben. Liegt z zwischen den
      * Stuetzstellen x_i und x_i+1, wird eine Gerade mit den Punkten (x_i,y_i)
      * und (x_i+1, y_i+1) gebildet und in z ausgewertet.
-     *
+     * <p>
      * Die Stuetzstellen liegen der Groesse nach geordnet vor. Der Fall
      * ungeordneter Stuetzstellen oder leerer Stuetzstellen muss nicht extra
      * behandelt werden.
@@ -94,30 +94,33 @@ public class LinearInterpolation implements InterpolationMethod {
         // Find x_i
         int i;
         for (i = 0; i < x.length; i++) {
-			if (x[i] > z) {
-				i--;
-				break;
-			}
-		}
+            if (x[i] > z) {
+                i--;
+                break;
+            }
+        }
         // check if z not in range
         if (i < 0) return y[0];
-        if (i >= x.length - 1) return y[y.length-1];
+        if (i >= x.length - 1) return y[y.length - 1];
         // calculate linear function
-        assert (x[i] != x[i+1]);
-		double[] short_x = { x[i], x[i+1] };
-		double[] short_y = { y[i], y[i+1] };
+        assert (x[i] != x[i + 1]);
+        double[] short_x = {x[i], x[i + 1]};
+        double[] short_y = {y[i], y[i + 1]};
         if (x[i] == 0) {
-        	// reverse arrays
-        	double temp = x[0];
-        	x[0] = x[1]; x[1] = temp;
-        	temp = y[0]; y[0] = y[1]; y[1] = temp;
+            // reverse arrays
+            double temp = x[0];
+            x[0] = x[1];
+            x[1] = temp;
+            temp = y[0];
+            y[0] = y[1];
+            y[1] = temp;
         }
         TridiagonalMatrix solver = new TridiagonalMatrix(
-				new double[] {short_x[1]}, 
-				new double[] {short_x[0], 1}, 
-				new double[] {1});
-		double params[] = solver.solveLinearSystem(short_y);
-        return params[0]*z + params[1];
+                new double[]{short_x[1]},
+                new double[]{short_x[0], 1},
+                new double[]{1});
+        double[] params = solver.solveLinearSystem(short_y);
+        return params[0] * z + params[1];
     }
 
 }

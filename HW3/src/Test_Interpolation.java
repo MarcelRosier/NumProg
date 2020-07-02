@@ -1,4 +1,3 @@
-package src;
 import java.util.Arrays;
 
 public class Test_Interpolation {
